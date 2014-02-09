@@ -1,0 +1,20 @@
+#!/usr/bin/env ruby
+
+loop do
+  $stdout.print 'rush> '
+
+  line = $stdin.gets
+
+  if line
+    line.strip!
+  else
+    exit
+  end
+
+  pid = fork {
+    exec line
+  }
+
+  Process.wait pid
+end
+
