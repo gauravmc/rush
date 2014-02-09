@@ -4,7 +4,9 @@ require 'shellwords'
 
 class Rush
   BUILTINS = {
-    'cd' => ->(dir){ Dir.chdir(dir) }
+    'cd' => ->(dir){ Dir.chdir(dir) },
+    'exit' => ->(code = 0){ exit(code.to_i) },
+    'exec' => ->(*command){ exec *command }
   }
 
   class << self
