@@ -1,20 +1,38 @@
 #!/usr/bin/env ruby
+require 'shellwords'
 
-loop do
-  $stdout.print 'rush> '
 
-  line = $stdin.gets
-
-  if line
-    line.strip!
-  else
-    exit
-  end
-
-  pid = fork {
-    exec line
+class Rush
+  BUILTINS = {
+    'cd' => ->(dir){ Dir.chdir(dir) }
   }
 
-  Process.wait pid
+  class << self
+    def start 
+      loop do
+        $stdout.print 'rush> '
+
+        line = $stdin.gets
+
+        if line
+          line.strip!
+        else
+          exit
+        end
+
+        command, *arguments = Shellwords.shellsplit(line)
+
+        if cmd = BUILTINS[command]
+          cmd.call(*arguments)
+        else
+          pid = fork {
+            exec line
+          }
+          Process.wait pid
+        end
+      end
+    end
+  end
 end
 
+Rush.start
