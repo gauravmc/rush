@@ -32,7 +32,7 @@ class Rush
           cmd.call(*arguments)
         else
           pid = fork {
-            exec line
+            exec command, *arguments
           }
           Process.wait pid
         end
