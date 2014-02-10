@@ -6,7 +6,11 @@ class Rush
   BUILTINS = {
     'cd' => ->(dir){ Dir.chdir(dir) },
     'exit' => ->(code = 0){ exit(code.to_i) },
-    'exec' => ->(*command){ exec *command }
+    'exec' => ->(*command){ exec *command },
+    'set' => ->(args){
+      env_var, value = args.split('=')
+      ENV[env_var] = value
+    }
   }
 
   class << self
